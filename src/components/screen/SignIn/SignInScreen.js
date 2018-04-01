@@ -1,16 +1,13 @@
 import React from 'react';
-import { Alert, View, Text, Animated } from 'react-native';
+import { Alert, View, Text, Animated, AsyncStorage } from 'react-native';
 import { LinearGradient } from 'expo';
 import { Button } from 'react-native-elements';
 import styles from './SignInStyles';
-import config from '../../../config';
+import config from '../../../../config';
 import { SignTextInput } from "../../ui/SignTextInput";
-import { SignRouter } from "../../navigations/SignNavigation";
 import { LinkText } from "../../ui/LinkText";
 
 export class SignInScreen extends React.Component {
-
-    static route = {};
 
     constructor(props) {
         super(props);
@@ -23,6 +20,7 @@ export class SignInScreen extends React.Component {
     }
 
     componentDidMount() {
+        //로그인화면 에니메이션 효과
         Animated.timing(          // Uses easing functions
             this._opacity,    // The value to drive
             {
@@ -42,11 +40,53 @@ export class SignInScreen extends React.Component {
         this.setState({pwd});
     };
 
+    //회원가입 클릭 시 동의화면 이동
     handleSignUp = () => {
-        this.props.navigator.push(SignRouter.getRoute('Terms'));
+        //this.props.navigator.push(SignRouter.getRoute('Terms'));
+        this.props.navigation.navigate('Terms');
     };
 
+    //로그인버튼 클릭 시
+    handleSignIn = async () => {
+        //보낼 데이터
+        var userData = {
+            userId: this.state.id.valueOf(),
+            userPw: this.state.pwd.valueOf()
+        };
 
+        //로그인 서버로 post 형식으로 보냄
+        const signInCheck = await fetch(`${config.server}/signIn`, {
+            method: "POST",
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(userData)
+        });
+
+        //받은 데이터가 promise형식이므로 json형태로 변형
+        const jsonData = await signInCheck.json();
+
+        //현재 error시에 message가 있음
+        if (jsonData.message) {
+            Alert.alert(
+                '로그인 오류',
+                '아이디와 비밀번호를 확인해 주세요',
+                [
+                    {text: '확인', onPress: () => console.log('OK Pressed')},
+                ],
+                { cancelable: false }
+            )
+        } else {
+            //로그인 성공시 자동로그인 key값을 true로 설정 후 홈 화면으로 이동
+            try {
+                await AsyncStorage.setItem('AutoLogin', 'true');
+                this.props.navigation.navigate('Home');
+            } catch (error) {
+                // Error saving data
+            }
+        }
+    };
     render() {
         const { login, id, pwd } = this.state;
         const animation = this._opacity;
@@ -74,6 +114,7 @@ export class SignInScreen extends React.Component {
                         title = '로그인'
                         titleStyle = { styles.buttonText }
                         buttonStyle = { styles.button }
+                        onPress = { this.handleSignIn }
                     />
                     <View style = { styles.linkView }>
                         <LinkText

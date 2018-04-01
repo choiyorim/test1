@@ -7,12 +7,6 @@ import {TermsModal} from "../../ui/TermsModal";
 
 export class TermsScreen extends React.Component {
 
-    static route = {
-        // navigationBar: {
-        //     title: '가입 약관 동의'
-        // }
-    };
-
     constructor(props) {
         super(props);
         this.state = {
@@ -25,13 +19,16 @@ export class TermsScreen extends React.Component {
         }
     }
 
+    //첫번째 동의 체크박스
     toggleFirst = () => {
         this.setState({isFirstChecked: !this.state.isFirstChecked});
     };
 
+    //두번째 동의 체크박스
     toggleSecond = () => {
         this.setState({isSecondChecked: !this.state.isSecondChecked});
     };
+    //모두 동의
     allTrue = () => {
         if (this.returnChecked()) {
             this.setState({
@@ -46,13 +43,16 @@ export class TermsScreen extends React.Component {
         }
     };
 
+    //첫번째 동의 모달 열기, 닫기
     openFirst = () => {
         this.setState({firstVisible: true});
     };
+
     closeFirst = () => {
         this.setState({firstVisible: false});
     };
 
+    //두번째 동의 모달 열기, 닫기
     openSecond = () => {
         this.setState({secondVisible: true});
     };
@@ -60,10 +60,12 @@ export class TermsScreen extends React.Component {
         this.setState({secondVisible: false});
     };
 
+    //모든 동의 확인 후 다음 화면
     nextPage = () => {
         if (this.returnChecked()) {
-            this.props.navigator.pop();
-            this.props.navigator.push(SignRouter.getRoute('SignUp'));
+            // this.props.navigator.pop();
+            // this.props.navigator.push(SignRouter.getRoute('SignUp'));
+            this.props.navigation.navigate('SignUp');
         } else {
             Alert.alert(
                 '경고',
@@ -76,10 +78,12 @@ export class TermsScreen extends React.Component {
         }
     };
 
+    //동의 체크
     returnChecked = () => {
         let {isFirstChecked, isSecondChecked} = this.state;
         return isFirstChecked && isSecondChecked;
     };
+
 
     render() {
         const { isFirstChecked, isSecondChecked, firstVisible, secondVisible } = this.state;
