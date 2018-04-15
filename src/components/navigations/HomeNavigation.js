@@ -22,7 +22,7 @@ export const HomeTabs = TabNavigator({
         }
     },
     {
-        lazy: true,
+        //lazy: true,
         initialRouteName: 'Home',
         tabBarPosition: 'bottom',
         //swipeEnabled:false,
@@ -33,6 +33,9 @@ export const HomeTabs = TabNavigator({
         tabBarOptions: {
             activeTintColor: 'red',
             inactiveTintColor: 'black',
+            indicatorStyle: {
+                opacity: 0
+            },
             style: {
                 backgroundColor: 'white'
             },

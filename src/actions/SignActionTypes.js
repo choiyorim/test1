@@ -1,9 +1,10 @@
 export const SIGN_IN = "SIGN_IN";
 export const SIGN_UP = "SIGN_UP";
 
-export function signin(){
+export function signin(response){
     return{
-        type: SIGN_IN
+        type: SIGN_IN,
+        payload: response,
     }
 }
 

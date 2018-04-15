@@ -21,6 +21,7 @@
   "dependencies": {
     "@expo/ex-navigation": "^4.2.0",
     "@exponent/ex-navigation": "^2.9.1",
+    "axios": "^0.18.0",
     "expo": "^25.0.0",
     "prop-types": "^15.6.1",
     "react": "16.2.0",
@@ -30,6 +31,8 @@
     "react-native-material-dropdown": "^0.11.1",
     "react-navigation": "^1.5.9",
     "react-redux": "^5.0.7",
-    "redux": "^3.7.2"
+    "redux": "^3.7.2",
+    "redux-actions": "^2.3.0",
+    "redux-thunk": "^2.2.0"
   }
 }

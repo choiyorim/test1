@@ -1,7 +1,7 @@
 import * as types from "../actions/SignActionTypes";
 
 const initalState = {
-
+    login:'false',
 };
 
 export default sign = (state=initalState, action) => {
@@ -9,7 +9,7 @@ export default sign = (state=initalState, action) => {
         case types.SIGN_IN:
             return {
                 ...state,
-
+                login: action.payload,
             };
         case types.SIGN_UP:
             return {

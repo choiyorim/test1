@@ -1,12 +1,13 @@
 import React from 'react';
 import {StyleSheet, BackHandler} from 'react-native';
 import {Constants} from 'expo';
-import {createStore} from 'redux';
+import {createStore, applyMiddleware} from 'redux';
 import {Provider} from 'react-redux';
+import ReduxThunk from 'redux-thunk';
 import {SignNavigation} from "./src/components/navigations/SignNavigation";
-import reducer from "./src/reducers";
+import reducer from "./src/modules";
 
-const store = createStore(reducer);
+const store = createStore(reducer, applyMiddleware(ReduxThunk));
 
 export default class App extends React.Component {
 
@@ -23,7 +24,7 @@ export default class App extends React.Component {
         return (
             //redux store 사용
             <Provider store={store}>
-                    <SignNavigation store={store}/>
+                    <SignNavigation/>
             </Provider>
         );
     }
