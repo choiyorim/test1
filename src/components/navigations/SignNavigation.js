@@ -3,7 +3,7 @@ import {StyleSheet} from 'react-native';
 import {StackNavigator} from 'react-navigation';
 import {Constants} from 'expo';
 import SignInScreen from "../screen/SignIn/SignInScreen";
-import {SignUpScreen} from "../screen/SignUp/SignUpScreen";
+import SignUpScreen from "../screen/SignUp/SignUpScreen";
 import {TermsScreen} from "../screen/Terms/TermsScreen";
 import {HomeTabs} from "./HomeNavigation";
 

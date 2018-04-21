@@ -2,16 +2,18 @@ import React from 'react';
 import {Alert, View, Text, Picker, ScrollView} from 'react-native';
 import {LinearGradient} from 'expo';
 import {Button} from 'react-native-elements';
-import DatePicker from 'react-native-datepicker';
+// import DatePicker from 'react-native-datepicker';
 import styles from "./SignUpStyles";
 import config from "../../../../config";
 import {SignTextInput} from "../../ui/SignTextInput";
-import {SignUpPicker} from "../../ui/SignUpPicker";
+// import {SignUpPicker} from "../../ui/SignUpPicker";
 import {SignUpMajor} from "../../ui/SignUpMajor";
 import {SignUpDatePicker} from "../../ui/SignUpDatePicker";
+import {connect} from 'react-redux';
+import * as signin from "../../../modules/signin";
+import {bindActionCreators} from "redux";
 
-
-export class SignUpScreen extends React.Component {
+class SignUpScreen extends React.Component {
 
     constructor(props) {
         super(props);
@@ -188,4 +190,15 @@ export class SignUpScreen extends React.Component {
         );
     }
 }
+
+
+export default connect((state) => ({
+        login: state.signin.login,
+
+    }),
+    (dispatch) => ({
+        SignIn: bindActionCreators(signin, dispatch)
+    })
+)(SignUpScreen);
+
 

@@ -68,5 +68,10 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    actionButtonIcon: {
+        fontSize: 20,
+        height: 22,
+        color: 'white',
+    },
 
 });

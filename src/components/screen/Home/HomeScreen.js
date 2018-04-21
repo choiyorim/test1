@@ -1,5 +1,7 @@
 import React from 'react';
 import { View, Text, Button, Animated, RefreshControl, Platform, StatusBar} from 'react-native';
+import ActionButton from 'react-native-action-button';
+import Icon from 'react-native-vector-icons/Ionicons';
 import styles from "./HomeStyles";
 
 const HEADER_MAX_HEIGHT = 300;
@@ -58,12 +60,12 @@ export class HomeScreen extends React.Component{
 
         const titleScale = scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [1, 1, 0.8],
+            outputRange: [1, 1, 1],
             extrapolate: 'clamp',
         });
         const titleTranslate = scrollY.interpolate({
             inputRange: [0, HEADER_SCROLL_DISTANCE / 2, HEADER_SCROLL_DISTANCE],
-            outputRange: [0, 0, -8],
+            outputRange: [0, 0, 0],
             extrapolate: 'clamp',
         });
 
@@ -74,6 +76,7 @@ export class HomeScreen extends React.Component{
                     barStyle="light-content"
                     backgroundColor="rgba(0, 0, 0, 0.251)"
                 />
+
                 <Animated.ScrollView
                     style={styles.fill}
                     scrollEventThrottle={1}
@@ -102,6 +105,17 @@ export class HomeScreen extends React.Component{
                 >
                     {this._renderScrollViewContent()}
                 </Animated.ScrollView>
+                <ActionButton buttonColor="rgba(231,76,60,1)">
+                    <ActionButton.Item buttonColor='#9b59b6' title="New Task" onPress={() => console.log("notes tapped!")}>
+                        <Icon name="md-create" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#3498db' title="Notifications" onPress={() => {}}>
+                        <Icon name="md-notifications-off" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                    <ActionButton.Item buttonColor='#1abc9c' title="All Tasks" onPress={() => {}}>
+                        <Icon name="md-done-all" style={styles.actionButtonIcon} />
+                    </ActionButton.Item>
+                </ActionButton>
                 <Animated.View
 
                     style={[
@@ -112,13 +126,20 @@ export class HomeScreen extends React.Component{
                         },
                     ]}
                 >
-                    <View
-                        style={styles.bar_content}
+                    <Animated.View
+                        style={[
+                            styles.bar_content,
+                            {opacity: imageOpacity,
+                            transform: [
+                                { translateY: imageTranslate }
+                                ]
+                            }
+                            ]}
                     >
                         <Text>평점</Text>
                         <Text>교수명</Text>
                         <Text>교재</Text>
-                    </View>
+                    </Animated.View>
                 </Animated.View>
                 <Animated.View
                     style={[
