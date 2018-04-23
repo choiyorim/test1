@@ -7,7 +7,6 @@ export class SignUpDatePicker extends React.Component {
 
     render() {
         return (
-            <View style = { { marginBottom: 10, alignItems: 'center' } }>
                 <View style={styles.container}>
                     <DatePicker
                         style={{width: '100%'}}
@@ -20,7 +19,6 @@ export class SignUpDatePicker extends React.Component {
                         onDateChange={this.props.handle}
                     />
                 </View>
-            </View>
         )
     }
 }

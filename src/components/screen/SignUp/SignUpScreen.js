@@ -63,7 +63,7 @@ class SignUpScreen extends React.Component {
             body: JSON.stringify(userData),
         });
 
-        const jsonData = signUpCheck.json();
+        const jsonData = await signUpCheck.json();
         if (jsonData.message) {
             Alert.alert(
                 '회원가입 오류',

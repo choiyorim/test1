@@ -1,12 +1,12 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 
 export class LinkText extends React.Component {
     render() {
         return (
             <TouchableOpacity onPress = { this.props.handle }>
-                <Text style = { styles.link }>
+                <Text style = {this.props.link_style}>
                     { this.props.value }
                 </Text>
             </TouchableOpacity>
@@ -17,10 +17,5 @@ export class LinkText extends React.Component {
 LinkText.propTypes = {
     handle: PropTypes.func,
     value: PropTypes.string,
+    link_style: PropTypes.object
 };
-
-const styles = StyleSheet.create({
-    link: {
-        color: 'white',
-    }
-});
