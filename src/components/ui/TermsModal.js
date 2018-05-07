@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, Modal, ScrollView, View } from 'react-native';
+import {StyleSheet, Modal, ScrollView, View, Alert} from 'react-native';
 import { Button, Text } from 'react-native-elements';
 import PropTypes from 'prop-types';
+import HTML from 'react-native-render-html';
 export class TermsModal extends React.Component{
     constructor(props){
         super(props);
@@ -11,7 +12,9 @@ export class TermsModal extends React.Component{
     }
 
     render(){
+
         return(
+
             <Modal
                 visible = { this.props.modalVisible }
                 animationType = { 'slide' }
@@ -20,27 +23,8 @@ export class TermsModal extends React.Component{
                 <View style = { styles.modalContainer } >
                     <ScrollView style = { styles.innerContainer } >
                         <Text h3 style = { styles.headerText }>{ this.props.title }</Text>
+                        <HTML html={this.props.text}/>
                         <Text h3>
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
-                            fsdfasdfasdfasdfasdfafsdfasdfasdfasdfasdfa
 
                         </Text>
                     </ScrollView>
@@ -61,6 +45,7 @@ TermsModal.propTypes = {
     closeModal : PropTypes.func,
     modalVisible : PropTypes.bool,
     title : PropTypes.string,
+    text:PropTypes.string
 };
 
 const styles = StyleSheet.create({

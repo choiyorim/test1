@@ -16,7 +16,8 @@ import {TermsModal} from "../../ui/TermsModal";
 import {SignUpMajor} from "../../ui/SignUpMajor";
 import {SignUpDatePicker} from "../../ui/SignUpDatePicker";
 import Toast, {DURATION} from 'react-native-easy-toast';
-
+import {validation} from "../../../utils/validations";
+import {View1} from "../../ui/View1";
 const labels = ["가입동의","기본정보","부가정보"];
 const customStyles = {
     stepIndicatorSize: 25,
@@ -62,7 +63,7 @@ class SignInScreen extends React.Component {
             secondVisible: false,
             userId: undefined,
             userPw: undefined,
-            userRePw: undefined,
+            userRePw: '',
             userNickName: undefined,
             email: undefined,
             major: undefined,
@@ -71,7 +72,22 @@ class SignInScreen extends React.Component {
             connectedMajor: undefined,
             admissionYear: undefined,
             checkIdNo: 0,
-            checkIdLabel:'',
+            checkIdLabel: '',
+            checkIdClient:false,
+            checkIdServer:false,
+            checkNickNameNo: 0,
+            checkNickNameLabel: '',
+            checkNickNameClient:false,
+            checkNickNameServer:false,
+            checkEmailNo:0,
+            checkEmailLabel:'',
+            checkEmailClient:false,
+            checkEmailServer:false,
+            checkPasswordNo:0,
+            checkPasswordLabel:'',
+            checkPassRe:0,
+            checkPassReLabel:'',
+            passCheck:false
         }
     }
 
@@ -86,7 +102,13 @@ class SignInScreen extends React.Component {
                 delay: 200,
             }            // Configuration
         ).start();                // Don't forget start!
+
+        const {SignIn} = this.props;
+
+        SignIn.modal2();
+
     }
+
 
     //로그인화면 id 입력
     handleSignInId = (id) => {
@@ -140,6 +162,7 @@ class SignInScreen extends React.Component {
     handleTermsFirstCheck = () => {
         const {SignIn} = this.props;
         SignIn.handleTermsFirstCheck();
+
     };
 
     //두번째 동의 체크박스
@@ -154,9 +177,10 @@ class SignInScreen extends React.Component {
     };
 
     //첫번째 동의 모달 열기, 닫기
-    handleTermsFirstModalOpen = () => {
+    handleTermsFirstModalOpen = async () => {
         const {SignIn} = this.props;
         SignIn.handleTermsFirstModal(true);
+
     };
 
     handleTermsFirstModalClose = () => {
@@ -196,35 +220,127 @@ class SignInScreen extends React.Component {
     };
 
     handleStateUserId = (userId) => {
-        if (0 < userId.length && userId.length < 6) {
-            this.setState({checkIdNo:1, checkIdLabel:'아이디는 6자 이상이여야 합니다.'});
+        if (validation.checkIdLength(userId)) {
+            this.setState({checkIdClient:true, checkIdNo:0, checkIdLabel:''});
         } else {
-            this.setState({checkIdNo:0, checkIdLabel:''});
+            this.setState({checkIdClient:false, checkIdNo:1, checkIdLabel:'아이디는 6자 이상이여야 합니다.'});
         }
         this.setState({userId});
     };
     handleCheckUserId = async () => {
-      const {SignIn} = this.props;
-      const result = await SignIn.checkUserId(this.state.userId);
-      if(result){
-          this.setState({checkIdNo:2, checkIdLabel:'사용가능한 아이디 입니다.'});
-      }else{
-          this.setState({checkIdNo:1, checkIdLabel:'사용불가능한 아이디 입니다.'});
-      }
+        const {SignIn} = this.props;
+        if(this.state.checkIdClient && this.state.userId.length > 0) {
+            const result = await SignIn.checkUserId(this.state.userId);
+            if (result) {
+                this.setState({checkIdServer:true, checkIdNo: 2, checkIdLabel: '사용가능한 아이디 입니다.'});
+            } else {
+                this.setState({checkIdServer:false, checkIdNo: 1, checkIdLabel: '사용불가능한 아이디 입니다.'});
+            }
+        } else {
+            this.setState({checkIdServer: false});
+        }
     };
+
+    handleStateUserNickName = (userNickName) => {
+        if(validation.checkNickNameLength(userNickName)){
+            this.setState({checkNickNameClient:true, checkNickNameNo:0, checkNickNameLabel: ''});
+        }else{
+            this.setState({checkNickNameClient:false, checkNickNameNo:1, checkNickNameLabel: '닉네임은 한글자 이상이여야 합니다.'});
+        }
+        this.setState({userNickName});
+    };
+    handleCheckUserNickName = async () => {
+        const {SignIn} = this.props;
+        if(this.state.checkNickNameClient && this.state.userNickName.length > 0) {
+            const result = await SignIn.checkUserNickName(this.state.userNickName);
+            if (result) {
+                this.setState({checkNickNameServer:true, checkNickNameNo: 2, checkNickNameLabel: '사용가능한 닉네임 입니다.'});
+            } else {
+                this.setState({checkNickNameServer:false, checkNickNameNo: 1, checkNickNameLabel: '사용불가능한 닉네임 입니다.'});
+            }
+        } else {
+            this.setState({checkNickNameServer: false});
+        }
+    };
+
+
+    handleStateUserEmail = (email) => {
+        if(validation.checkEmail(email)){
+            this.setState({checkEmailClient:true, checkEmailNo: 0, checkEmailLabel: ''});
+        }else{
+            this.setState({checkEmailClient:false, checkEmailNo: 1, checkEmailLabel: '이메일 형식이 아닙니다.'});
+        }
+        this.setState({email});
+    };
+
+    handleCheckUserEmail = async () => {
+        const {SignIn} = this.props;
+        if(this.state.checkEmailClient && this.state.email.length > 0) {
+            const result = await SignIn.checkUserEmail(this.state.email);
+            if (result) {
+                this.setState({checkEmailServer: true, checkEmailNo: 2, checkEmailLabel: '사용가능한 이메일 입니다.'});
+            } else {
+                this.setState({checkEmailServer: false, checkEmailNo: 1, checkEmailLabel: '사용불가능한 이메일 입니다.'});
+            }
+        } else {
+            this.setState({checkEmailServer: false});
+        }
+    };
+
 
     handleStateUserPw = (userPw) => {
         this.setState({userPw});
-    };
-    handleStateUserNickName = (userNickName) => {
-        this.setState({userNickName});
+
+        if(validation.checkPassLength(userPw)){
+            if(this.state.userRePw.length < 7 ){
+                this.setState({checkPasswordNo:0,checkPasswordLabel:''});
+            }else if(this.state.userRePw === userPw && this.state.userRePw.length>7){
+                this.setState({checkPasswordNo:0,checkPasswordLabel:''});
+                this.setState({checkPassRe: 2, checkPassReLabel: '일치합니다'});
+            }else {
+                this.setState({checkPasswordNo:0,checkPasswordLabel:''});
+                this.setState({checkPassRe: 1, checkPassReLabel: '비밀번호가 불일치 합니다'});
+            }
+        }
+        else{
+            if(this.state.userRePw.length > 0 && this.state.userRePw !== userPw ) {
+                if (0 < userPw.length && userPw.length < 8) {
+                    this.setState({checkPasswordNo: 1, checkPasswordLabel: '8자 이상 입력해주세요.'});
+                    this.setState({checkPassRe: 1, checkPassReLabel: '비밀번호가 불일치 합니다'});
+                }
+                else {
+                    this.setState({checkPasswordNo: 0, checkPasswordLabel: ''});
+                    this.setState({checkPassRe: 0, checkPassReLabel:''});
+                }
+            }
+            else {
+                if (userPw.length === 0 && this.state.userRePw.length === 0) {
+                    this.setState({checkPasswordNo: 0, checkPasswordLabel: ''});
+                }
+                else {
+                    this.setState({checkPasswordNo: 1, checkPasswordLabel: '8자 이상 입력해주세요.'});
+                }
+            }
+        }
     };
     handleStateUserRePw = (userRePw) => {
         this.setState({userRePw});
+        if (this.state.userPw.length < 8 ){
+            this.setState({checkPassRe: 0, checkPassReLabel:''});
+        }
+        else if (validation.checkPassRe(this.state.userPw, userRePw)){
+            this.setState({checkPassRe: 2, checkPassReLabel: '일치합니다'});
+        }
+        else {
+            if (userRePw.length <= 0) {
+                this.setState({checkPassRe: 0, checkPassReLabel: ''});
+            }
+            else if (this.state.userPw !== userRePw) {
+                this.setState({checkPassRe: 1, checkPassReLabel: '비밀번호가 불일치 합니다'});
+            }
+        }
     };
-    handleStateEmail = (email) => {
-        this.setState({email});
-    };
+
     handleStateMajor = (major) => {
         this.setState({major});
     };
@@ -255,6 +371,7 @@ class SignInScreen extends React.Component {
     handleStateAdmissionYear = (admissionYear) => {
         this.setState({admissionYear});
     };
+
 
 
     onPageChange = (diff) => {
@@ -273,37 +390,19 @@ class SignInScreen extends React.Component {
             case 0:
                 return(
                     <View style={{flex:1, marginTop:20}}>
-                        <View style={{flexDirection:'row', alignItems:'center', height:40, width:280, marginBottom:10, padding:10, borderWidth:1}}>
-                            <RoundCheckbox
-                                size={24}
-                                checked={this.props.isFirstChecked}
-                                onValueChange={this.handleTermsFirstCheck}
-                            />
-                            <Text style={{width:180, marginLeft:10}}>
-                                개인정보 수집 및 이용
-                            </Text>
-                            <LinkText
-                                value='보기'
-                                handle={this.handleTermsFirstModalOpen}
-                                link_style={{color:'grey'}}
+                        <View1
+                            isFirstChecked ={this.props.isFirstChecked}
+                            handleTermsFirstCheck = {this.handleTermsFirstCheck}
+                            text1 = '개인정보 수집 및 이용'
+                            handleTermsFirstModalOpen = {this.handleTermsFirstModalOpen}
+                        />
+                            <View1
+                                isFirstChecked ={this.props.isSecondChecked}
+                                handleTermsFirstCheck = {this.handleTermsSecondCheck}
+                                text1 = '한담 서비스 이용 약관'
+                                handleTermsFirstModalOpen ={ this.handleTermsSecondModalOpen}
                             />
                         </View>
-                        <View style={{flexDirection:'row', alignItems:'center', height:40, width:280, marginBottom:10, padding:10, borderWidth:1}}>
-                            <RoundCheckbox
-                                size={24}
-                                checked={this.props.isSecondChecked}
-                                onValueChange={this.handleTermsSecondCheck}
-                            />
-                            <Text style={{width:180, marginLeft:10}}>
-                                한담 서비스 이용 약관
-                            </Text>
-                            <LinkText
-                                value='보기'
-                                handle={this.handleTermsSecondModalOpen}
-                                link_style={{color:'grey'}}
-                            />
-                        </View>
-                    </View>
                 );
             case 1:
                 return(
@@ -323,6 +422,8 @@ class SignInScreen extends React.Component {
                                        icon={'lock'}
                                        secureText={true}
                                        label={'비밀번호'}
+                                       checkNo={this.state.checkPasswordNo}
+                                       checkLabel={this.state.checkPasswordLabel}
                         />
                         <SignTextInput handle={this.handleStateUserRePw}
                                        value={userRePw}
@@ -330,18 +431,26 @@ class SignInScreen extends React.Component {
                                        icon={'lock'}
                                        secureText={true}
                                        label={'비밀번호 확인'}
+                                       checkNo ={this.state.checkPassRe}
+                                       checkLabel={this.state.checkPassReLabel}
                         />
                         <SignTextInput handle={this.handleStateUserNickName}
                                        value={userNickName}
                                        placeholder={'닉네임'}
                                        icon={'user-secret'}
                                        label={'닉네임'}
+                                       checkNo={this.state.checkNickNameNo}
+                                       checkLabel={this.state.checkNickNameLabel}
+                                       blur={this.handleCheckUserNickName}
                         />
-                        <SignTextInput handle={this.handleStateEmail}
+                        <SignTextInput handle={this.handleStateUserEmail}
                                        value={email}
                                        placeholder={'이메일'}
                                        icon={'envelope'}
                                        label={'이메일'}
+                                       checkNo={this.state.checkEmailNo}
+                                       checkLabel={this.state.checkEmailLabel}
+                                       blur={this.handleCheckUserEmail}
                         />
                     </View>
                 );
@@ -369,46 +478,48 @@ class SignInScreen extends React.Component {
         }
     };
     renderModalFooter = (page) => {
-      switch(page){
-          case 0:
-              return(
-                  <View>
-                      <Button onPress={this.nextTerms} title="다음"/>
-                  </View>
-              );
-          case 1:
-              return(
-                  <View>
-                      <Button onPress={this.basicChecked} title="다음"/>
-                  </View>
-              );
-          case 2:
-              return(
-                  <View>
-                      <Button onPress={this.signUpUser} title="가입 완료"/>
-                  </View>
-              );
-      }
+        switch(page){
+            case 0:
+                return(
+                    <View>
+                        <Button onPress={this.nextTerms} title="다음"/>
+                    </View>
+                );
+            case 1:
+                return(
+                    <View>
+                        <Button onPress={this.basicChecked} title="다음"/>
+                    </View>
+                );
+            case 2:
+                return(
+                    <View>
+                        <Button onPress={this.signUpUser} title="가입 완료"/>
+                    </View>
+                );
+        }
     };
 
     basicChecked = async () => {
         const { SignIn } = this.props;
-        let checkid = await SignIn.checkUserId(this.state.userId);
-        if(!checkid) return this.handleCheckUserId();
-        let checkemail = await SignIn.checkUserEmail(this.state.email);
-        if(!checkemail) return this.handleCheckUserEmail();
+        // let checkid = await SignIn.checkUserId(this.state.userId);
+        // if(!checkid) return this.handleCheckUserId();
+        // let checknickname = await SignIn.checkUserNickName(this.state.userNickName);
+        // if(!checknickname)
+        // let checkemail = await SignIn.checkUserEmail(this.state.email);
+        // if(!checkemail) return this.handleCheckUserEmail();
         this.onPageChange(1);
     };
     signUpUser = async () => {
-      const {SignIn} = this.props;
-      const {userId, userPw, userNickName, email, major, minor, doubleMajor, connectedMajor, admissionYear} = this.state;
-      let signUpCheck = await SignIn.signUpUser(userId, userPw, userNickName, email, major, minor, doubleMajor, connectedMajor, admissionYear);
-      if(signUpCheck){
-          this.handleSignUpModal();
-          this.refs.toast.show('회원가입에 성공했습니다.');
-      } else {
+        const {SignIn} = this.props;
+        const {userId, userPw, userNickName, email, major, minor, doubleMajor, connectedMajor, admissionYear} = this.state;
+        let signUpCheck = await SignIn.signUpUser(userId, userPw, userNickName, email, major, minor, doubleMajor, connectedMajor, admissionYear);
+        if(signUpCheck){
+            this.handleSignUpModal();
+            this.refs.toast.show('회원가입에 성공했습니다.');
+        } else {
 
-      }
+        }
     };
 
     render() {
@@ -430,6 +541,7 @@ class SignInScreen extends React.Component {
                     <TermsModal
                         closeModal = { this.handleTermsSecondModalClose }
                         modalVisible = { this.props.secondVisible }
+                        text = {this.props.secondTerms}
                         title = '한담 서비스 이용 약관'
                     />
                     <Modal isVisible={termsModal}>
@@ -571,6 +683,8 @@ export default connect((state) => ({
         doubleMajor: state.signin.doubleMajor,
         connectedMajor: state.signin.connectedMajor,
         admissionYear: state.signin.admissionYear,
+        firstTerms:state.signin.firstTerms,
+        secondTerms: state.signin.termsText
 
     }),
     (dispatch) => ({

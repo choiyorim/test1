@@ -12,6 +12,7 @@ import {SignUpDatePicker} from "../../ui/SignUpDatePicker";
 import {connect} from 'react-redux';
 import * as signin from "../../../modules/signin";
 import {bindActionCreators} from "redux";
+import {signPassCheck} from "../../../utils/validations";
 
 class SignUpScreen extends React.Component {
 
@@ -191,7 +192,6 @@ class SignUpScreen extends React.Component {
     }
 }
 
-
 export default connect((state) => ({
         login: state.signin.login,
 
@@ -200,5 +200,6 @@ export default connect((state) => ({
         SignIn: bindActionCreators(signin, dispatch)
     })
 )(SignUpScreen);
+
 
 

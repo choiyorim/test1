@@ -7,6 +7,7 @@ const ROOT_URL = config.server;
 const SIGN_IN = 'SIGN_IN';
 const SIGN_IN_ID = 'SIGN_IN_ID';
 const SIGN_IN_PWD = 'SIGN_IN_PWD';
+const Terms2 ='Terms2';
 const SIGN_UP_MODAL = 'SIGN_UP_MODAL';
 const TERMS_FIRST_CHECKED = 'TERMS_FIRST_CHECKED';
 const TERMS_SECOND_CHECKED = 'TERMS_SECOND_CHECKED';
@@ -38,7 +39,9 @@ const initialState = {
     minor: undefined,
     doubleMajor: undefined,
     connectedMajor: undefined,
-    admissionYear: undefined
+    admissionYear: undefined,
+    firstTerms:'',
+    termsText:''
 };
 
 export const handleSignInId = (id) => dispatch => {
@@ -93,7 +96,17 @@ export const signInUser = (userId, userPw) => async dispatch => {
         dispatch({type: SIGN_IN, payload: false});
     }
 
+
 };
+export const modal2 =() =>async dispatch =>{
+    const signInTerms2 = await fetch(`${ROOT_URL}/terms/privacyPolicy`);
+    const jsonData = await signInTerms2.json();
+    if(jsonData.statusCode==200){
+        dispatch({type:Terms2, payload:jsonData.result});
+    }else{
+        dispatch({type:Terms2, payload:false});
+    }
+}
 
 export const checkUserId = (userId) => async dispatch => {
     const userIdCheck = await fetch(`${ROOT_URL}/userValidation/checkUserId/${userId}`);
@@ -159,6 +172,13 @@ export default handleActions({
             login: action.payload,
         }
     },
+    [Terms2]:(state, action)=>{
+        return {
+            ...state,
+            termsText: action.payload,
+        }
+    },
+
     [SIGN_IN_ID]: (state, action) => {
         return {
             ...state,
